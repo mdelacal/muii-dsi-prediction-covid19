@@ -4,8 +4,9 @@ close all, clear, clc   % cerrar ventanas graficas, borrar memoria y consola
 %% CARGAR DATOS ACTUALIZADOS DESDE URL %%
 url = ['https://covid19.isciii.es/resources/serie_historica_acumulados.csv'];
 filename = 'datos.csv';
-urlwrite(url,filename);
+websave(filename, url);
 X = readtable('datos.csv'); % cargar datos
+X = X(:,1:7); % quitamos una octava columna que se ha creado innecesaria
 
 %% QUITAR NAN DEL CSV %%
 for i = 1:height(X)
@@ -36,39 +37,39 @@ end
 %% MOSTRAR DATOS %%
 figure();
 subplot(2,3,1)
-plot([X_CCAA{:,2}],[X_CCAA{:,3}]);
+plot([X_CCAA{:,2}],[X_CCAA{:,3}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Casos totales %s', CCAA);
 title(str);
 hold on;
 
 subplot(2,3,2)
-plot([X_CCAA{:,2}],[X_CCAA{:,4}]);
+plot([X_CCAA{:,2}],[X_CCAA{:,4}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Hospitalizados %s', CCAA);
 title(str);
 hold on;
 
 subplot(2,3,3)
-plot([X_CCAA{:,2}],[X_CCAA{:,5}]);
+plot([X_CCAA{:,2}],[X_CCAA{:,5}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('UCI %s', CCAA);
 title(str);
 hold on;
 
 subplot(2,3,4)
-plot([X_CCAA{:,2}],[X_CCAA{:,6}]);
+plot([X_CCAA{:,2}],[X_CCAA{:,6}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Fallecidos %s', CCAA);
 title(str);
 hold on;
 
 subplot(2,3,5)
-plot([X_CCAA{:,2}],[X_CCAA{:,7}]);
+plot([X_CCAA{:,2}],[X_CCAA{:,7}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Recuperados %s', CCAA);
 title(str);
 hold on;
 
 figure();
-plot([X_CCAA{:,2}],[X_CCAA{:,3}]);
+plot([X_CCAA{:,2}],[X_CCAA{:,3}], 'DatetimeTickFormat', 'dd/MM');
 hold on;
-plot([X_CCAA{:,2}],[X_CCAA{:,7}]);
+plot([X_CCAA{:,2}],[X_CCAA{:,7}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Casos y recuperados %s', CCAA);
 title(str);
 hold on;
@@ -95,16 +96,16 @@ for i = 1:day
     end
 end
 
-%% MOSTRAR GRÁFICAS NUEVOS CASOS Y ALTAS DIARIAS
+%% MOSTRAR GRÁFICOS DE BARRAS NUEVOS CASOS Y ALTAS DIARIAS
 figure();
 subplot(1,2,1)
-plot([X_CCAA{:,2}],[X_CCAA_newcasesdaily{:,1}]);
+bar([X_CCAA{:,2}],[X_CCAA_newcasesdaily{:,1}]);
 str=sprintf('Nuevos casos diarios %s', CCAA);
 title(str);
 hold on;
 
 subplot(1,2,2)
-plot([X_CCAA{:,2}],[X_CCAA_newrecoversdaily{:,1}]);
+bar([X_CCAA{:,2}],[X_CCAA_newrecoversdaily{:,1}]);
 str=sprintf('Nuevas altas diarias %s', CCAA);
 title(str);
 hold on;
