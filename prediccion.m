@@ -6,7 +6,7 @@ url = ['https://covid19.isciii.es/resources/serie_historica_acumulados.csv'];
 filename = 'datos.csv';
 websave(filename, url);
 X = readtable('datos.csv'); % cargar datos
-X = X(:,1:7); % quitamos una octava columna que se ha creado innecesaria
+X = X(:,1:9); % añadidas las columnas PCR+ y AC+
 
 %% QUITAR NAN DEL CSV %%
 for i = 1:height(X)
@@ -37,39 +37,40 @@ end
 %% MOSTRAR DATOS %%
 figure();
 subplot(2,3,1)
-plot([X_CCAA{:,2}],[X_CCAA{:,3}], 'DatetimeTickFormat', 'dd/MM');
+% los casos totales los obtenemos de la suma de las columnas CASOS, PCR y ACTest
+plot([X_CCAA{:,2}],[X_CCAA{:,3}]+[X_CCAA{:,4}]+[X_CCAA{:,5}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Casos totales %s', CCAA);
 title(str);
 hold on;
 
 subplot(2,3,2)
-plot([X_CCAA{:,2}],[X_CCAA{:,4}], 'DatetimeTickFormat', 'dd/MM');
+plot([X_CCAA{:,2}],[X_CCAA{:,6}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Hospitalizados %s', CCAA);
 title(str);
 hold on;
 
 subplot(2,3,3)
-plot([X_CCAA{:,2}],[X_CCAA{:,5}], 'DatetimeTickFormat', 'dd/MM');
+plot([X_CCAA{:,2}],[X_CCAA{:,7}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('UCI %s', CCAA);
 title(str);
 hold on;
 
 subplot(2,3,4)
-plot([X_CCAA{:,2}],[X_CCAA{:,6}], 'DatetimeTickFormat', 'dd/MM');
+plot([X_CCAA{:,2}],[X_CCAA{:,8}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Fallecidos %s', CCAA);
 title(str);
 hold on;
 
 subplot(2,3,5)
-plot([X_CCAA{:,2}],[X_CCAA{:,7}], 'DatetimeTickFormat', 'dd/MM');
+plot([X_CCAA{:,2}],[X_CCAA{:,9}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Recuperados %s', CCAA);
 title(str);
 hold on;
 
 figure();
-plot([X_CCAA{:,2}],[X_CCAA{:,3}], 'DatetimeTickFormat', 'dd/MM');
+plot([X_CCAA{:,2}],[X_CCAA{:,3}]+[X_CCAA{:,4}]+[X_CCAA{:,5}], 'DatetimeTickFormat', 'dd/MM');
 hold on;
-plot([X_CCAA{:,2}],[X_CCAA{:,7}], 'DatetimeTickFormat', 'dd/MM');
+plot([X_CCAA{:,2}],[X_CCAA{:,9}], 'DatetimeTickFormat', 'dd/MM');
 str=sprintf('Casos y recuperados %s', CCAA);
 title(str);
 hold on;
@@ -77,10 +78,10 @@ hold on;
 %% Casos nuevos diarios/semanales
 [day, col] = size(X_CCAA); % obtener número de filas y columnas de los datos de la CCAA
 % Diarios
-new_cases_day = X_CCAA{day, 3} - X_CCAA{day-1, 3}; % nuevos casos en el último día
+new_cases_day = (X_CCAA{day, 3}+X_CCAA{day, 4}+X_CCAA{day, 5}) - (X_CCAA{day-1, 3}+X_CCAA{day-1, 4}+X_CCAA{day-1, 5}); % nuevos casos en el último día
 sprintf('Nuevos casos diarios en %s: %d', CCAA, new_cases_day) 
 % Semanales
-new_cases_week = X_CCAA{day, 3} - X_CCAA{day-6, 3}; % nuevos casos en la última semana
+new_cases_week = (X_CCAA{day, 3}+X_CCAA{day, 4}+X_CCAA{day, 5}) - (X_CCAA{day-6, 3}+X_CCAA{day-6, 4}+X_CCAA{day-6, 5}); % nuevos casos en la última semana
 sprintf('Nuevos casos última semana en %s: %d', CCAA, new_cases_week)
 
 % Agrupamos los nuevos casos y recuperados diarios en variables
@@ -88,11 +89,11 @@ X_CCAA_newcasesdaily = {};
 X_CCAA_newrecoversdaily = {};
 for i = 1:day
     if(i == 1)
-        X_CCAA_newcasesdaily = [X_CCAA_newcasesdaily;X_CCAA{i,3}];
-        X_CCAA_newrecoversdaily = [X_CCAA_newrecoversdaily;X_CCAA{i,7}];
+        X_CCAA_newcasesdaily = [X_CCAA_newcasesdaily;X_CCAA{i,3}+X_CCAA{i,4}+X_CCAA{i,5}];
+        X_CCAA_newrecoversdaily = [X_CCAA_newrecoversdaily;X_CCAA{i,9}];
     else
-        X_CCAA_newcasesdaily = [X_CCAA_newcasesdaily;X_CCAA{i,3}-X_CCAA{i-1,3}];
-        X_CCAA_newrecoversdaily = [X_CCAA_newrecoversdaily;X_CCAA{i,7}-X_CCAA{i-1,7}];
+        X_CCAA_newcasesdaily = [X_CCAA_newcasesdaily;(X_CCAA{i,3}+X_CCAA{i,4}+X_CCAA{i,5})-(X_CCAA{i-1,3}+X_CCAA{i-1,4}+X_CCAA{i-1,5})];
+        X_CCAA_newrecoversdaily = [X_CCAA_newrecoversdaily;X_CCAA{i,9}-X_CCAA{i-1,9}];
     end
 end
 
