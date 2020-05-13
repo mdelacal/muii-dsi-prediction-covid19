@@ -1,5 +1,5 @@
 %% BORRAR GRÁFICAS MEMORIA Y CONSOLA %%
-close all, clear, clc   % cerrar ventanas graficas, borrar memoria y consola
+%close all, clear, clc   % cerrar ventanas graficas, borrar memoria y consola
 
 %% EJEMPLO VARICELA
 data=[X_CCAA_newcasesdaily{:}];
